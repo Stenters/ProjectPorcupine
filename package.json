@@ -1,9 +1,9 @@
 {
-  "name": "ngrok",
+  "name": "projectpterodactyl",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./app.js"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
@@ -14,5 +14,17 @@
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
     "pug": "^2.0.4"
-  }
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stenters/ProjectPterodactyl.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stenters/ProjectPterodactyl/issues"
+  },
+  "homepage": "https://github.com/Stenters/ProjectPterodactyl#readme",
+  "description": ""
 }
