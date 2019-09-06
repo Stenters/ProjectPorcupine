@@ -44,7 +44,7 @@ $(document).ready(function () {
         text += "\n";
 
         $.post(
-            'http://localhost:3000/messages',
+            '/messages',
             {msg: text},
             function (data) {
                 console.log(`Response is ${data}`);
@@ -54,7 +54,7 @@ $(document).ready(function () {
     
     function readLog() {
         $.get(
-            'http://localhost:3000/messages',
+            '/messages',
             function (data, status) {
                 console.log(`Response is ${data}\nStatus is ${status}`);
                 chatBox.html(data);
@@ -73,19 +73,18 @@ $(document).ready(function () {
 
     function verify(uname, pass) {
         console.log(`username is: ${uname}, password is ${pass}`);
-        let isValid = false;
 
         $.get(
-            'http://localhost:3000/users',(function (data){
+            '/users',(function (data){
             console.log(`username is: ${uname}, password is ${pass}`);
             console.log("response from /users: " + JSON.stringify(data));
 
             if (data['users'][uname] === pass){
                 authorize();
+            } else {
+              document.cookie = "username=";
             }
         }));
-
-        return isValid;
     }
 
     function login() {
