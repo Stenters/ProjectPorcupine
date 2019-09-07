@@ -7,8 +7,14 @@ $(document).ready(function () {
     let submitBtn = $('#submitButton');
     let validateBtn = $('#validateBtn');
     let welcomeText = $('#Welcome');
-    login();
-
+    let userSettings;
+    
+    $.get('/users', function(data) { 
+    populateData(data)
+//      userSettings = JSON.stringify(data);
+//      login(); 
+    });
+    
     // -- EVENT HANDLERS --
 
     textBox.on('keypress', function (e) {
@@ -27,12 +33,13 @@ $(document).ready(function () {
     });
 
     window.setInterval(readLog, 500);
+    
     // -- CHAT METHODS --
 
     function sendMsg(text) {
         verify(username, getCookie('password'));
 
-        text = `<p><em>${username}:</em> ${text}</p>`;
+        text = `<p><em style= "color: ${userSettings[username][1]}>${username}:</em> ${text}</p>`;
         console.log(`message sent: ${text}`);
         chatBox.append(text);
         writeLog(text);
@@ -45,10 +52,7 @@ $(document).ready(function () {
 
         $.post(
             '/messages',
-            {msg: text},
-            function (data) {
-                console.log(`Response is ${data}`);
-            }
+            {msg: text}
         )
     }
     
@@ -56,35 +60,16 @@ $(document).ready(function () {
         $.get(
             '/messages',
             function (data, status) {
-                console.log(`Response is ${data}\nStatus is ${status}`);
                 chatBox.html(data);
             });
     }
 
     // -- AUTH METHODS--
-
-    function authorize() {
-        console.log("Logging in..." + username);
-
-        $('#text').prop("disabled", false);
-        welcomeText.text(`Welcome ${username}!`);
-        chatBox.append(readLog());
-    }
-
-    function verify(uname, pass) {
-        console.log(`username is: ${uname}, password is ${pass}`);
-
-        $.get(
-            '/users',(function (data){
-            console.log(`username is: ${uname}, password is ${pass}`);
-            console.log("response from /users: " + JSON.stringify(data));
-
-            if (data['users'][uname] === pass){
-                authorize();
-            } else {
-              document.cookie = "username=";
-            }
-        }));
+    
+    function populateData(data) {
+      userSettings = JSON.stringify(data);
+      
+      login();
     }
 
     function login() {
@@ -100,6 +85,20 @@ $(document).ready(function () {
             verify(username, getCookie("password"));
         }
     }
+    
+    function verify(uname, pass) {
+      console.log(`userSettings = ${userSetings}`);
+      let isValid = userSettings[uname][0] === pass;
+      
+      if (isValid) {
+        $('#text').prop("disabled", false);
+        welcomeText.text(`Welcome ${username}!`);
+        chatBox.append(readLog());
+      }
+      
+      return isValid;
+    }
+
 
     // -- HELPER FUNCTIONS --
 
