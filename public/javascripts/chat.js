@@ -76,11 +76,11 @@ $(document).ready(function () {
         let isValid = false;
 
         $.get(
-            'http://localhost:3000/users',(function (data){
+            '/users',(function (data){
             console.log(`username is: ${uname}, password is ${pass}`);
             console.log("response from /users: " + JSON.stringify(data));
 
-            if (data['users'][uname] === pass){
+            if (data[uname]['pass'] === pass){
                 authorize();
             }
         }));
