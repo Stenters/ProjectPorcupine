@@ -65,11 +65,30 @@ $(document).ready(function () {
     }
 
     // -- AUTH METHODS--
-    
-    function populateData(data) {
-      userSettings = JSON.stringify(data);
-      
-      login();
+
+    function authorize() {
+        console.log("Logging in..." + username);
+
+        $('#text').prop("disabled", false);
+        welcomeText.text(`Welcome ${username}!`);
+        chatBox.append(readLog());
+    }
+
+    function verify(uname, pass) {
+        console.log(`username is: ${uname}, password is ${pass}`);
+        let isValid = false;
+
+        $.get(
+            '/users',(function (data){
+            console.log(`username is: ${uname}, password is ${pass}`);
+            console.log("response from /users: " + JSON.stringify(data));
+
+            if (data[uname]['pass'] === pass){
+                authorize();
+            }
+        }));
+
+        return isValid;
     }
 
     function login() {
