@@ -1,0 +1,22 @@
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: lightblue;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#msgPane {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+#Welcome {
+  color: white;
+}
+
+#Chatbox {
+  color: black;
+}

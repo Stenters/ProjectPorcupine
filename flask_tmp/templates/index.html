@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="UTF-8">
+    <title>Pterodactyl 1.1</title>
+
+    <!--Favicon stuff-->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='images/apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='images/apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='images/apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='images/apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='images/apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='images/apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='images/apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ url_for('static', filename='images/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='images/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
+    <link rel="manifest" href="./images/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <!-- Latest minified boostrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css') }}">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+<body>
+
+    <h1 id="Welcome" class="page-header">Hello  {{name}}!</h1>
+
+    <div id="Chatbox" class="col-lg-12"></div>
+
+    {% if log %}
+    <div id='test'><h3>{{log}}</h3></div>
+    {% endif %}
+
+    <div id="msgPane" class="input-group">
+        <form action="/message" method="POST" class="input-group" autocomplete="off">
+            <label for="text" class="input-group-addon">Send Message:</label>
+            <input type="text" class="form-control" name="text">
+            <div class="input-group-btn"><input type="submit" value="Submit" class="btn btn-primary"></div>
+        </form>
+    </div>
+
+</body>
+
+
+<!-- Reload messages -->
+<script type="text/javascript">
+
+    $('form').submit(function(event) {
+        event.preventDefault()
+        let text = {'text': $('input[name=text]').val()}
+        $('input[name=text]').val("")
+        $.post("/message", text)
+    })
+
+    function readLog() {
+         $("#Chatbox").load('/message'); }
+    window.setInterval(readLog, 500);
+</script>
+
+</html
