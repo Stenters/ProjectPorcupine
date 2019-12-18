@@ -1,0 +1,43 @@
+<body>
+
+    <div class="tab">
+        <button id="ChatTab" class="active" type="button" onclick="window.location.reload()">Chat</button>
+        <button id="NotionTab" type="button" onclick="window.location.href='{{'notion'}}'">Notion</button>
+    </div>
+
+    <h1 id="Welcome" class="page-header">Hello  {{name}}!</h1>
+
+    <div id="Chatbox" class="col-lg-12"></div>
+
+    {% if log %}
+    <div id='test'><h3>{{log}}</h3></div>
+    {% endif %}
+
+    <div id="msgPane" class="input-group">
+        <form action="/message" method="POST" class="input-group" autocomplete="off">
+            <label for="text" class="input-group-addon">Send Message:</label>
+            <input type="text" class="form-control" name="text">
+            <div class="input-group-btn"><input type="submit" value="Submit" class="btn btn-primary"></div>
+        </form>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+    $('.tablinks').on("Click", function() {
+        alert("Tab was selected")
+    })
+
+    $('form').submit(function(event) {
+        event.preventDefault()
+        let text = {'text': $('input[name=text]').val()}
+        $('input[name=text]').val("")
+        $.post("/message", text)
+    })
+
+    window.setInterval(function () {
+        $("#Chatbox").load('/message');
+    }, 500);
+
+</script>

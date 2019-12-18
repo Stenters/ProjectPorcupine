@@ -1,5 +1,5 @@
 from flask import *
-from scripts import db
+from scripts import db, render as r
 # from scripts import *
 
 app = Flask(__name__)
@@ -12,8 +12,8 @@ username = None
 def main():
    username = request.cookies.get('username')
 
-   if username != None:
-      return render_template('index.html', name = username)
+   if username != None and username != "":
+      return r.renderContent('chat.html', name=username)
    return redirect('/login')
 
 
@@ -29,7 +29,8 @@ def login():
          resp.set_cookie('username', request.form['username'])
          resp.set_cookie('password', request.form['password'])
          return resp
-   return render_template('login.html', error = error)
+   # return render_template('login.html', error = error)
+   return r.renderContent('login_tmp.html', error = error)
 
 
 @app.route('/message', methods = ['GET', 'POST'])
@@ -38,6 +39,9 @@ def message():
       db.log_msg(request.form['text'], request.cookies.get('username'))
    return db.get_all_messages()
 
+@app.route('/notion', methods = ['GET', 'POST'])
+def notion():
+   return r.renderContent('notion.html')
 
 if __name__ == '__main__':
    app.run(debug=True) 
