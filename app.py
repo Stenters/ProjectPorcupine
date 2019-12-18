@@ -10,12 +10,15 @@ username = None
 
 @app.route('/')
 def main():
+   return redirect('chat')
+
+@app.route('/chat', methods = ['GET', 'POST'])
+def chat():
    username = request.cookies.get('username')
 
    if username != None and username != "":
       return r.renderContent('chat.html', name=username)
    return redirect('/login')
-
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
@@ -30,7 +33,7 @@ def login():
          resp.set_cookie('password', request.form['password'])
          return resp
    # return render_template('login.html', error = error)
-   return r.renderContent('login_tmp.html', error = error)
+   return r.renderContent('login.html', error = error)
 
 
 @app.route('/message', methods = ['GET', 'POST'])
