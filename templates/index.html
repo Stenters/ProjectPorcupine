@@ -51,8 +51,6 @@
 
 </body>
 
-
-<!-- Reload messages -->
 <script type="text/javascript">
 
     $('form').submit(function(event) {
@@ -62,9 +60,9 @@
         $.post("/message", text)
     })
 
-    function readLog() {
-         $("#Chatbox").load('/message'); }
-    window.setInterval(readLog, 500);
+    window.setInterval(function () {
+        $("#Chatbox").load('/message');
+    }, 500);
 </script>
 
 </html
