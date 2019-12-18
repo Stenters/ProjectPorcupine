@@ -32,9 +32,7 @@ def login():
          resp.set_cookie('username', request.form['username'])
          resp.set_cookie('password', request.form['password'])
          return resp
-   # return render_template('login.html', error = error)
    return r.renderContent('login.html', error = error)
-
 
 @app.route('/message', methods = ['GET', 'POST'])
 def message():
