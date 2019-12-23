@@ -46,9 +46,9 @@ def message():
       db.log_msg(request.form['text'], request.cookies.get('username'))
    return db.get_all_messages()
 
-@app.route('/notion', methods = ['GET', 'POST'])
-def notion():
-   return r.renderContent('notion.html')
+@app.route('/kanban', methods = ['GET', 'POST'])
+def kanban():
+   return r.renderContent('kanban.html')
 
 if __name__ == '__main__':
    app.run(debug=True)
