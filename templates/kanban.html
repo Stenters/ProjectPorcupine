@@ -1,0 +1,93 @@
+<table>
+
+  <tr>
+    <th>
+      <b>To Do</b>
+    </th>
+    <th>
+      <b>Doing</b>
+    </th>
+    <th>
+      <b>Done</b>
+    </th>
+  </tr>
+
+  <tr>
+    <td>
+      <div id="todo-div">{{ todo }}</div>
+    </td>
+    <td>
+      <div id="doing-div"> {{ doing }}</div>
+    </td>
+    <td>
+      <div id="done-div"> {{ done }}</div>
+    </td>
+  </tr>
+
+</table>
+
+<div id="todoPane" class="input-group">
+  <form action="/todoitemsubmit" method="POST" class="input-group" autocomplete="off">
+      <label for="text" class="input-group-addon">Add Todo Item:</label>
+      <input type="text" class="form-control" name="text">
+      <div class="input-group-btn"><input type="submit" value="Submit" class="btn btn-primary"></div>
+  </form>
+</div>
+
+<script type="text/javascript">
+
+  function move_to_done() {
+    // Update element
+    $(this).remove()
+    $(this).removeClass('kanban-doing')
+    $(this).addClass('kanban-done')
+    $(this).appendTo('#done-div')
+    
+    // Post to db
+    $.post("/kanban", {'status': 'done', 'value': $(this).html(), 'update': true})
+  }
+
+  function move_to_doing() {
+    // Update element
+    $(this).remove()
+    $(this).click(move_to_done)
+    $(this).removeClass('kanban-todo')
+    $(this).addClass('kanban-doing')
+    $(this).appendTo('#doing-div')
+    
+    // Post to db
+    $.post("/kanban", {'status': 'doing', 'value': $(this).html(), 'update': true})
+  }
+
+  $('form').submit(function(event) {
+    // Prevent default reaction
+    event.preventDefault()
+
+    // Get the text from the DOM
+    let text = $('input[name=text]').val()
+    $('input[name=text]').val("")
+    
+    // Create a new button to display
+    let element = $('<p>' + text + '</p>')
+    element.click(move_to_doing)
+    element.addClass('kanban-item')
+    element.addClass('kanban-todo')
+    element.appendTo('#todo-div')
+
+    // Post to db
+    $.post("/kanban", {'status': 'todo', 'value': element.html(), 'update': false})
+  })
+
+  function register() {
+    if ($(this).hasClass("kanban-todo")) {
+      $(this).click(move_to_doing)
+    }
+    else if ($(this).hasClass("kanban-doing")) {
+      $(this).click(move_to_done)
+    }
+  }
+
+  $('#todo-div').children().each(register)
+  $("#doing-div").children().each(register)
+
+</script>
