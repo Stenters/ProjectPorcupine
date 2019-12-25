@@ -48,8 +48,15 @@ def message():
 
 @app.route('/kanban', methods = ['GET', 'POST'])
 def kanban():
-   return r.renderContent('kanban.html')
-
+   if request.method == 'GET':
+      (todo, doing, done) = db.get_all_kanban()
+      print(f"kanban = ({todo},{doing},{done})")
+      return r.renderContent('kanban.html', 
+         todo=Markup(todo), doing=Markup(doing), done=Markup(done))
+   else:
+      db.log_kanban(request.form['status'], request.form['value'])
+      return r.renderContent('kanban.html')
+     
 if __name__ == '__main__':
    app.run(debug=True)
    

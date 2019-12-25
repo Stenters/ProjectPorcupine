@@ -39,6 +39,18 @@ class Message(db.Model):
     def __repr__(self):
         return f"<id='{self.id}', msg='{self.msg}', author='{self.author}', time='{self.time}'>"
 
+class Kanban(db.Model):
+    __tablename__ = "kanban"
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(5))
+    value = db.Column(db.String(1024))
+
+    def __init__(self, status, value):
+        self.status = status
+        self.value = value
+        
+    def __repr__(self):
+        return f"<id='{self.id}', status='{self.status}', value='{self.value}'>"
 
 def log_msg(msg, author):
     db.session.add(Message(msg, author))
@@ -59,6 +71,32 @@ def login(username, password):
 def create_user(username, password):
     db.session.add(User(username, password))
     db.session.commit()
+
+def log_kanban(status, value):
+    if status == "doing":
+        prev = Kanban.query.filter_by(value=value, status="todo").first()
+        db.session.delete(prev)
+    if status == "done":
+        prev = Kanban.query.filter_by(value=value, status="doing").first()
+        db.session.delete(prev)
+    db.session.add(Kanban(status, value))
+    db.session.commit()
+
+
+def get_all_kanban():
+    todo = ''
+    doing = ''
+    done = ''
+    
+    for resp in db.session.query(Kanban).all():
+        if resp.status == "todo":
+            todo += '<p class="kanban-item kanban-todo">' + resp.value + '</p>'
+        elif resp.status == "doing":
+            doing += '<p class="kanban-item kanban-doing">' + resp.value + '</p>'
+        else:
+            done += '<p class="kanban-item kanban-done">' + resp.value + '</p>'
+
+    return (todo, doing, done)
 
 # lock = threading.Lock()
 
