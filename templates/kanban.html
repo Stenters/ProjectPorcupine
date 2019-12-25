@@ -1,4 +1,35 @@
-<blockquote class="trello-board-compact">
-    <a href="https://trello.com/b/tovZS5GK/projectpterodactyl">Trello Board</a>
-  </blockquote>
-  <script src="https://p.trellocdn.com/embed.min.js"></script>
+<table>
+
+  <tr>
+    <th>
+      <b>To Do</b>
+    </th>
+    <th>
+      <b>Doing</b>
+    </th>
+    <th>
+      <b>Done</b>
+    </th>
+  </tr>
+
+  <tr>
+    <td>
+      <div id="todo-div"><p>Test</p></div>
+    </td>
+    <td>
+      <div id="doing-div"><p>Testing</p></div>
+    </td>
+    <td>
+      <div id="done-div"><p>Tested</p></div>
+    </td>
+  </tr>
+
+</table>
+
+<div id="todoPane" class="input-group">
+  <form action="/todoitemsubmit" method="POST" class="input-group" autocomplete="off">
+      <label for="text" class="input-group-addon">Add Todo Item:</label>
+      <input type="text" class="form-control" name="text">
+      <div class="input-group-btn"><input type="submit" value="Submit" class="btn btn-primary"></div>
+  </form>
+</div>
