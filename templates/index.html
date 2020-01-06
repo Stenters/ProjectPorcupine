@@ -5,30 +5,38 @@
     <title>Pterodactyl 3.0</title>
 
     <!--Favicon stuff-->
-    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='images/apple-icon-57x57.png') }}">
-    <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='images/apple-icon-60x60.png') }}">
-    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='images/apple-icon-72x72.png') }}">
-    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/apple-icon-76x76.png') }}">
-    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='images/apple-icon-114x114.png') }}">
-    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='images/apple-icon-120x120.png') }}">
-    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='images/apple-icon-144x144.png') }}">
-    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='images/apple-icon-152x152.png') }}">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/apple-icon-180x180.png') }}">
-    <link rel="icon" type="image/png" sizes="192x192"  href="{{ url_for('static', filename='images/android-icon-192x192.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='images/favicon-96x96.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon-16x16.png') }}">
-    <link rel="manifest" href="./images/manifest.json">
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='images/favicon/apple-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='images/favicon/apple-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='images/favicon/apple-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='images/favicon/apple-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='images/favicon/apple-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='images/favicon/apple-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='images/favicon/apple-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='images/favicon/apple-icon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='images/favicon/apple-icon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"  href="{{ url_for('static', filename='images/favicon/android-icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='images/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ url_for('static', filename='images/favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='images/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="./images/favicon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-
+    
     <!-- Latest minified boostrap-->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css')}}">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- SocketIO library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/tab-style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/kanban-style.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/menu-style.css')}}">    
 
 </head>
 
@@ -36,11 +44,44 @@
     <div class="tab">
         <button id="ChatTab" type="button" onclick="window.location.href='{{'chat'}}'">Chat</button>
         <button id="KanbanTab" type="button" onclick="window.location.href='{{'kanban'}}'">TODO</button>
+        <button id="MenuTab" type="button" onclick="showMenu()">Menu</button>
+    </div>
+
+    <div class="popup">
+        <label for="backgroundColorPicker">Background Color:</label>
+        <input type="color" id="backgroundColorPicker" value="#add8e6">
+        <label for="foregroundColorPicker">Foreground Color:</label>
+        <input type="color" id="foregroundColorPicker" value="#000">
     </div>
 
     {{ content }}
 
 </body>
 
+<script type="text/javascript">
+
+
+
+$('#backgroundColorPicker').get(0).addEventListener("change", changeBackgroundColor, false)
+$('#foregroundColorPicker').get(0).addEventListener("change", changeForegroundColor, false)
+
+function changeBackgroundColor(event) {
+    document.body.style.backgroundColor = event.target.value
+    document.cookie = "backgroundColor" + event.target.value
+}
+
+function changeForegroundColor(event) {
+    document.querySelectorAll('p').forEach(function(p){
+        p.style.color = event.target.value
+        document.cookie = "foregroundColor=" + event.target.value
+    })
+}
+
+function showMenu() {
+    popup = $('.popup')
+    popup.toggle(100)
+}
+
+</script>
 
 </html>
