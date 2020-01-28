@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        "Sandbox text"
+    </title>
+</head>
+
+<body>
+    <form action="" autocomplete="off" method="POST">
+        <label for="textInput">Enter Text</label>
+        <input id="textInput" type="text" name="text">
+        <input type="submit" value="Render">
+    </form>
+
+    {% if text %}
+    <h1>Old text:</h1>
+    <p>{{ text }}</p>
+    {% endif %}
+</body>
+
+</html>

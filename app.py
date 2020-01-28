@@ -17,25 +17,67 @@ db.init_app(app)
 
 # ROUTES
 
+
 @app.route('/')
 def main():
+   """
+   Called if no route is entered
+   """
    return redirect('chat')
+
 
 @app.route('/chat', methods = ['GET', 'POST'])
 def chat():
-   return rh.handle(request, rh.chat)
+   """
+   Main page, for chatting
+   """
+   username = request.cookies.get('username')
+
+   if username != None and username != "":
+      return r.renderContent('chat.html', name=username)
+   return redirect('/login')
+
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
-   return rh.handle(request, rh.login)
+   """
+   Route for handling logging in
+   """
+   error = None
+   
+   if request.method == 'POST':
+      if not db.login(request.form['username'], request.form['password']):
+         error = 'Invalid username or password. Please try again!'
+      else:
+         resp = make_response(redirect(url_for('main')))
+         resp.set_cookie('username', request.form['username'])
+         resp.set_cookie('password', request.form['password'])
+         return resp
+   return r.renderContent('login.html', error = error)
+
 
 @app.route('/message', methods = ['GET', 'POST'])
 def message():
-   return rh.handle(request, rh.message)
+   """
+   Route for posting messages or getting the pre-rendered html
+   """
+   if request.method == 'POST':
+      db.log_msg(request.form['text'], request.cookies.get('username'))
+   return db.get_all_messages()
+
 
 @app.route('/kanban', methods = ['GET', 'POST'])
 def kanban():
-   return rh.handle(request, rh.kanban)
+   """
+   Method for showing kanban board
+   """
+   if request.method == 'GET':
+      (todo, doing, done) = db.get_all_kanban()
+      return r.renderContent('kanban.html', 
+         todo=Markup(todo), doing=Markup(doing), done=Markup(done))
+   else:
+      db.log_kanban(request.form['status'], request.form['value'])
+      return r.renderContent('kanban.html')
 
 # Socket Events
 
@@ -52,6 +94,7 @@ def reciveMessage(message):
    print(f"logging message\n\tuser: {message['username']}\ttext: {message['text']}\n")
    db.log_msg(message['text'], message['username'])
    sio.emit('response', f"<p><strong>{message['username']}: </strong>{message['text']} <sub>{str(datetime.now())}</sub></p><br>\n", callback=callback)
+
 
 if __name__ == '__main__':
    app.run(debug=True)
