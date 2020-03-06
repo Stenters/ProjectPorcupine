@@ -100,8 +100,11 @@ class Database:
     def getDB(self):
         return db
 
-    ### Modles ###
 
+    def __repr__(self):
+        return db.__repr__()
+
+### Modles ###
 
 class User(db.Model):
     '''

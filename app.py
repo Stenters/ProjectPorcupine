@@ -72,6 +72,7 @@ def kanban():
    Method for showing kanban board
    """
    if request.method == 'GET':
+      print(">>> getting kanban from " + str(db))
       (todo, doing, done) = db.get_all_kanban()
       return r.renderContent('kanban.html', 
          todo=Markup(todo), doing=Markup(doing), done=Markup(done))
