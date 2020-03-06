@@ -13,7 +13,18 @@ app.secret_key = "A very secret key"
 # bind to app
 sio = SocketIO(app)
 heroku = Heroku(app)
-db = None
+Debug = False
+if '-d' in sys.argv:
+      print(">>> ENTERING DEBUG MODE")
+      Debug = True
+
+if Debug:
+      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///debug/app.db'
+      db = DB.Database(app, debug=True)
+else:
+      app.config['SQLALCHEMY_DATABASE_URI'] = \
+         'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
+      db = DB.Database(app)
 
 # ROUTES
 
@@ -98,15 +109,4 @@ def reciveMessage(message):
 
 
 if __name__ == '__main__':
-   if '-d' in sys.argv:
-      print(">>> ENTERING DEBUG MODE")
-      # Debug = true
-      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///debug/app.db'
-      db = DB.Database(app, debug=True)
-      app.run(debug=True)
-   else:
-      app.config['SQLALCHEMY_DATABASE_URI'] = \
-         'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
-      db = DB.Database(app)
-      print('db created as ' + str(db))
-      app.run(debug=False)
+   app.run(debug=Debug)
