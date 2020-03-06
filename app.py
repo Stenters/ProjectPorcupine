@@ -97,10 +97,6 @@ def reciveMessage(message):
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-   app.run(debug=False)
-   
-=======
    if '-d' in sys.argv:
       print(">>> ENTERING DEBUG MODE")
       # Debug = true
@@ -112,4 +108,3 @@ if __name__ == '__main__':
          'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
       db = DB.Database(app)
       app.run(debug=False)
->>>>>>> dev
