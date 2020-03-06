@@ -15,7 +15,8 @@
 </div>
 
 <script type="text/javascript">
-    const socket = io.connect('http://localhost:5000')
+    // const socket = io.connect('http://localhost:5000')
+    const socket = io.connect('http://pterodactyl.herokuapp.com')
 
     socket.on('connect', function() {
         socket.emit('status', 'User connected')

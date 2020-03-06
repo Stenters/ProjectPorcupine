@@ -11,20 +11,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "A very secret key"
 
 # bind to app
+# sio = SocketIO(app, cors_allowed_origin='*')
 sio = SocketIO(app)
 heroku = Heroku(app)
-Debug = False
-if '-d' in sys.argv:
-      print(">>> ENTERING DEBUG MODE")
-      Debug = True
-
-if Debug:
-      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///debug/app.db'
-      db = DB.Database(app, debug=True)
-else:
-      app.config['SQLALCHEMY_DATABASE_URI'] = \
-         'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
-      db = DB.Database(app)
+Debug = '-d' in sys.argv
+db = DB.Database(app, debug=Debug)
 
 # ROUTES
 
@@ -83,7 +74,6 @@ def kanban():
    Method for showing kanban board
    """
    if request.method == 'GET':
-      print(">>> getting kanban from " + str(db))
       (todo, doing, done) = db.get_all_kanban()
       return r.renderContent('kanban.html', 
          todo=Markup(todo), doing=Markup(doing), done=Markup(done))
