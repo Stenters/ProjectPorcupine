@@ -110,3 +110,4 @@ def reciveMessage(message):
 
 if __name__ == '__main__':
    app.run(debug=Debug)
+   print("db is " + str(db))
