@@ -67,7 +67,7 @@ $('#foregroundColorPicker').get(0).addEventListener("change", changeForegroundCo
 
 function changeBackgroundColor(event) {
     document.body.style.backgroundColor = event.target.value
-    document.cookie = "backgroundColor" + event.target.value
+    document.cookie = "backgroundColor=" + event.target.values
 }
 
 function changeForegroundColor(event) {

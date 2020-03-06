@@ -1,19 +1,19 @@
 from flask import *
 from flask_heroku import Heroku
 from flask_socketio import SocketIO
-from scripts import db, render as r, routeHandlers as rh
+from scripts import db as DB, render as r, routeHandlers as rh
 from datetime import datetime
+import sys
 
 # Configure the app
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
 app.secret_key = "A very secret key"
 
 # bind to app
 sio = SocketIO(app)
 heroku = Heroku(app)
-db.init_app(app)
+db = None
 
 # ROUTES
 
@@ -97,4 +97,14 @@ def reciveMessage(message):
 
 
 if __name__ == '__main__':
-   app.run(debug=True)
+   if '-d' in sys.argv:
+      print(">>> ENTERING DEBUG MODE")
+      # Debug = true
+      app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///debug/app.db'
+      db = DB.Database(app, debug=True)
+      app.run(debug=True)
+   else:
+      app.config['SQLALCHEMY_DATABASE_URI'] = \
+         'postgres://ylxnjybhzusyza:986c8ebe22636585e47fc3a8ece04a72addf08ff9ff6cf452a865e799de4aed1@ec2-54-225-205-79.compute-1.amazonaws.com:5432/dept28qq0qvuch'
+      db = DB.Database(app)
+      app.run(debug=False)
