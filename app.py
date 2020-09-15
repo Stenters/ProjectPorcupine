@@ -1,5 +1,4 @@
 from flask import *
-from flask_heroku import Heroku
 from scripts import db, render as r
 
 # Configure the app
@@ -9,7 +8,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ylxnjybhzusyza:986c8ebe22636
 app.secret_key = "A very secret key"
 
 # bind to app
-heroku = Heroku(app)
 db.init_app(app)
 
 # ROUTES
@@ -38,7 +36,7 @@ def login():
          resp.set_cookie('username', request.form['username'])
          resp.set_cookie('password', request.form['password'])
          return resp
-   return r.renderContent('login.html', error = error)
+   return render_template('login.html', error = error)
 
 @app.route('/message', methods = ['GET', 'POST'])
 def message():
