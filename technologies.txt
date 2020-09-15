@@ -1,9 +1,0 @@
---Required--
-Python 3
-PiP
-Flask
-Git
-
---Used--
-VSCode
-Heroku CLI

@@ -1,4 +1,4 @@
-<h1 id="Welcome" class="page-header">Hello  {{name}}!</h1>
+<h1 id="Welcome" class="page-header">Hello there  <em id='name'>{{name}}</em>!</h1>
 
 <div id="Chatbox" class="col-lg-12"></div>
 
@@ -7,7 +7,7 @@
 {% endif %}
 
 <div id="msgPane" class="input-group">
-    <form action="/message" method="POST" class="input-group" autocomplete="off">
+    <form class="input-group" autocomplete="off">
         <label for="text" class="input-group-addon">Send Message:</label>
         <input type="text" class="form-control" name="text">
         <div class="input-group-btn"><input type="submit" value="Submit" class="btn btn-primary"></div>
@@ -15,20 +15,22 @@
 </div>
 
 <script type="text/javascript">
+    // const socket = io.connect('http://localhost:5000')
+    const socket = io.connect('http://pterodactyl.herokuapp.com')
 
-    $('.tablinks').on("Click", function() {
-        alert("Tab was selected")
+    socket.on('connect', function() {
+        socket.emit('status', 'User connected')
     })
 
     $('form').submit(function(event) {
         event.preventDefault()
-        let text = {'text': $('input[name=text]').val()}
+        let text = {'text': $('input[name=text]').val(), 'username': $('#name').text()}
         $('input[name=text]').val("")
-        $.post("/message", text)
+        socket.emit('message', text)
     })
 
-    window.setInterval(function () {
-        $("#Chatbox").load('/message');
-    }, 500);
+    socket.on('response', function (html) {
+        $('#Chatbox').append(html)
+    })
 
 </script>
